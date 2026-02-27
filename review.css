@@ -1,46 +1,40 @@
 /* --- General Font & Body --- */
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
+body {
   font-family: 'Press Start 2P', monospace;
   background: #d97bb3; /* pink desktop */
-  height: 100%;
-  width: 100%;
-  overflow: hidden; /* prevent page scroll */
+  margin: 0;
+  overflow: hidden; /* Prevent page scrolling on mobile */
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
 }
 
 /* --- Main Client Review Window --- */
-.client-window {
+.window {
   width: 420px;
   height: 500px;
-  background: #c0c0c0;
+  background: #c0c0c0; /* window frame */
   border: 2px solid #000;
   box-shadow: 4px 4px 0 #7a7a7a;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* --- Title Bar --- */
-.client-window .title-bar {
+.title-bar {
   background: #000080;
   color: white;
-  font-family: 'MS Sans Serif', Tahoma, sans-serif;
-  font-size: 13px;
   padding: 4px 8px;
+  font-size: 13px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 /* --- Window Buttons --- */
-.client-window .buttons span {
+.buttons span {
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -51,10 +45,11 @@ html, body {
   line-height: 14px;
   font-size: 11px;
   color: black;
+  cursor: default;
 }
 
-/* --- Menu --- */
-.client-window .menu {
+/* --- Menu Bar --- */
+.menu {
   background: #c0c0c0;
   padding: 4px 8px;
   font-size: 12px;
@@ -65,14 +60,13 @@ html, body {
   cursor: pointer;
   color: #0000AA;
 }
-
 .menu-item.clickable:hover {
   background-color: #000080;
-  color: #FFF;
+  color: #FFFFFF;
 }
 
 /* --- Content Area --- */
-.client-window .content {
+.content {
   background: #ffffff;
   flex-grow: 1;
   overflow-y: auto; /* scroll inside content */
@@ -81,12 +75,12 @@ html, body {
   line-height: 1.4;
 }
 
-/* --- Review Style --- */
+/* --- Individual Review --- */
 .review {
   margin-bottom: 18px;
 }
 
-/* --- Leave Review Popup Window --- */
+/* --- Leave A Review Popup --- */
 .review-popup {
   border: 2px solid #000;
   background: #C0C0C0;
@@ -94,11 +88,12 @@ html, body {
   top: 100px;
   left: 50%;
   transform: translateX(-50%);
-  display: none;
+  display: none; /* hidden until opened */
   width: 400px;
   height: 250px;
   min-width: 300px;
   max-width: 500px;
+  padding: 0;
   z-index: 1000;
   box-shadow: 4px 4px 0 #7a7a7a;
   display: flex;
@@ -118,7 +113,7 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: move;
+  cursor: move; /* draggable */
 }
 
 /* --- Popup Close Button --- */
@@ -148,7 +143,7 @@ html, body {
   min-height: 0;
 }
 
-/* --- Form Buttons --- */
+/* --- Form Button --- */
 .retro-button {
   font-family: 'MS Sans Serif', Tahoma, sans-serif;
   font-size: 13px;
@@ -163,35 +158,34 @@ html, body {
   box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #FFF;
 }
 
-/* --- New Review Label --- */
-.review .new-label {
-  color: orange;
-  font-weight: bold;
-  display: block;
-  margin-bottom: 4px;
-}
-
-/* --- Mobile Styles --- */
-@media (max-width: 768px) {
-  html, body {
-    align-items: flex-start; /* start from top so windows are centered better */
-    padding: 8px;
+/* --- Mobile adjustments --- */
+@media only screen and (max-width: 768px) {
+  body {
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
   }
 
-  .client-window {
-    width: 75vw;
-    height: 75vh;
-    max-width: 95vw;
-    max-height: 95vh;
+  /* Client review window fills most of the screen */
+  .window {
+    width: 80vw;      /* 80% of viewport width */
+    height: 80vh;     /* 80% of viewport height */
+    margin: 10vh auto; /* center with vertical margin */
   }
 
+  /* Leave a Review popup slightly smaller */
   .review-popup {
-    width: 80vw;
+    width: 70vw;
     height: 50vh;
-    max-width: 95vw;
-    max-height: 60vh;
-    top: 20vh; /* slightly lower on screen */
+    top: 10vh;
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  /* Scroll inside windows only */
+  .window .content,
+  .review-popup .content {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
