@@ -4,7 +4,7 @@ const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // replace with y
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
   const popup = document.getElementById("reviewPopup");
-  popup.style.display = "block";
+  popup.style.display = "flex";
 });
 
 // --- Close popup ---
