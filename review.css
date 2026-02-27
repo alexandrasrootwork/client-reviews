@@ -1,46 +1,116 @@
 /* --- General Font & Body --- */
-body {
-  font-family: 'Press Start 2P', monospace;
-  background: #d97bb3; /* pink desktop */
-  margin: 0;
+* {
+  box-sizing: border-box;
 }
 
-/* --- Menu clickable item --- */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Press Start 2P', monospace;
+  background: #d97bb3; /* pink desktop */
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* prevent page scroll */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Main Client Review Window --- */
+.client-window {
+  width: 420px;
+  height: 500px;
+  background: #c0c0c0;
+  border: 2px solid #000;
+  box-shadow: 4px 4px 0 #7a7a7a;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Title Bar --- */
+.client-window .title-bar {
+  background: #000080;
+  color: white;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 13px;
+  padding: 4px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Window Buttons --- */
+.client-window .buttons span {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  background: #c0c0c0;
+  border: 1px solid #000;
+  text-align: center;
+  line-height: 14px;
+  font-size: 11px;
+  color: black;
+}
+
+/* --- Menu --- */
+.client-window .menu {
+  background: #c0c0c0;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-bottom: 1px solid #808080;
+}
+
 .menu-item.clickable {
   cursor: pointer;
   color: #0000AA;
 }
+
 .menu-item.clickable:hover {
   background-color: #000080;
-  color: #FFFFFF;
+  color: #FFF;
 }
 
-/* --- Pop-up window style (Leave A Review) --- */
+/* --- Content Area --- */
+.client-window .content {
+  background: #ffffff;
+  flex-grow: 1;
+  overflow-y: auto; /* scroll inside content */
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* --- Review Style --- */
+.review {
+  margin-bottom: 18px;
+}
+
+/* --- Leave Review Popup Window --- */
 .review-popup {
   border: 2px solid #000;
-  background: #C0C0C0;       /* client review window frame */
+  background: #C0C0C0;
   position: absolute;
   top: 100px;
   left: 50%;
   transform: translateX(-50%);
-  display: none;             /* hidden until opened */
-  width: 400px;              /* narrower, like the reference image */
-  height: 250px;             /* half-height window */
+  display: none;
+  width: 400px;
+  height: 250px;
   min-width: 300px;
   max-width: 500px;
-  padding: 0px;
   z-index: 1000;
-  box-shadow: 4px 4px 0 #7a7a7a; /* same shadow as client reviews */
+  box-shadow: 4px 4px 0 #7a7a7a;
   display: flex;
   flex-direction: column;
-  resize: both;             /* allows resizing like Windows 95 */
-  overflow: hidden;         /* keeps window frame neat */
+  resize: both;
+  overflow: hidden;
   flex-shrink: 0;
 }
 
-/* --- Title Bar (draggable) --- */
+/* --- Popup Title Bar --- */
 .review-popup .title-bar {
-  background: #000080;       /* matches client reviews */
+  background: #000080;
   color: #FFF;
   font-family: 'MS Sans Serif', Tahoma, sans-serif;
   font-size: 13px;
@@ -51,7 +121,7 @@ body {
   cursor: move;
 }
 
-/* --- Close Button --- */
+/* --- Popup Close Button --- */
 .review-popup .buttons span {
   cursor: pointer;
   display: inline-block;
@@ -66,21 +136,21 @@ body {
   color: black;
 }
 
-/* --- Content Area --- */
+/* --- Popup Content --- */
 .review-popup .content {
-  background: #dcdcdc;       /* light grey for form fields */
-  padding: 8px;              /* smaller padding like in the image */
+  background: #dcdcdc;
+  padding: 8px;
   font-family: 'MS Sans Serif', Tahoma, sans-serif;
   font-size: 13px;
   line-height: 1.4;
-  overflow: auto;            /* allows scrolling if content exceeds height */
-  flex: 1 1 auto;            /* content fills remaining popup height */
-  min-height: 0;             /* ensures content shrinks properly */
+  overflow: auto;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
-/* --- Form Button --- */
+/* --- Form Buttons --- */
 .retro-button {
-  font-family: 'MS Sans Serif', Tahoma, sans-serif; /* match client reviews */
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
   font-size: 13px;
   padding: 4px 8px;
   background: #C0C0C0;
@@ -93,55 +163,35 @@ body {
   box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #FFF;
 }
 
-/* --- Client Review Container --- */
-#reviewContainer {
-  padding: 8px;
-  max-height: 500px;
-  overflow-y: auto;
-  font-family: 'MS Sans Serif', Tahoma, sans-serif;
-  font-size: 13px;
-  background: #ffffff;
-  border: 2px solid #000;
-  box-shadow: 4px 4px 0 #7a7a7a;
-}
-
-/* --- Individual Review --- */
-.review {
-  margin-bottom: 16px;
-  line-height: 1.4;
-}
-
-/* --- NEW Label --- */
+/* --- New Review Label --- */
 .review .new-label {
   color: orange;
   font-weight: bold;
-  font-size: 12px;
-  margin-bottom: 2px;
+  display: block;
+  margin-bottom: 4px;
 }
 
-/* --- Responsive adjustments --- */
-@media (max-width: 600px) {
+/* --- Mobile Styles --- */
+@media (max-width: 768px) {
+  html, body {
+    align-items: flex-start; /* start from top so windows are centered better */
+    padding: 8px;
+  }
+
+  .client-window {
+    width: 75vw;
+    height: 75vh;
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+
   .review-popup {
-    width: 85vw;
-    height: 60vh;
-  }
-
-  #reviewContainer {
-    width: 95vw;
-    max-height: 80vh;
-  }
-
-  .review-popup .content textarea,
-  .review-popup .content input {
-    font-size: 14px;
-  }
-
-  .review {
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .review .new-label {
-    font-size: 13px;
+    width: 80vw;
+    height: 50vh;
+    max-width: 95vw;
+    max-height: 60vh;
+    top: 20vh; /* slightly lower on screen */
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
