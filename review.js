@@ -57,7 +57,7 @@ function submitReview() {
     return;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbxNA5g5QP1HXaf4Xoc-O4Y7sUGAR-D1Km9raaTIeCtGPiEesifGLigGujRRAs7V2KWf/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbyixhZWhN36hvMpi7FS34f4qWQ-VBFVqNQzpr4LWFRQE3Opvpri-eDfmWd9SPKqNO_h/exec", {
     method: "POST",
     body: JSON.stringify({ review: reviewText, name: nameText }),
     headers: { "Content-Type": "application/json" }
