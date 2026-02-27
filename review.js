@@ -47,8 +47,8 @@ function dragElement(elmnt) {
 
 // --- Submit review to Google Sheets ---
 function submitReview() {
-  const reviewInput = document.getElementById("reviewInput");
-  const nameInput = document.getElementById("reviewName");
+  const reviewInput = document.getElementById("reviewText");
+  const nameInput = document.getElementById("reviewerName");
   const reviewText = reviewInput.value.trim();
   const nameText = nameInput?.value.trim() || "";
 
@@ -68,6 +68,7 @@ function submitReview() {
     alert("Review submitted successfully!");
     reviewInput.value = "";
     if (nameInput) nameInput.value = "";
+    loadReviews(); // refresh reviews after submitting
   })
   .catch(err => {
     console.error("Error submitting review:", err);
@@ -80,3 +81,33 @@ document.getElementById("reviewSubmitButton").addEventListener("click", function
   e.preventDefault(); // prevent form reload
   submitReview();
 });
+
+// --- Load and display reviews from Google Sheets ---
+async function loadReviews() {
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbx8q42Tmcix2CxNLbYuCelLTiX8HoN1cU0WATSwigYTp7B1PanF0yYgv8WKCo67l3ib/exec");
+    const reviews = await response.json();
+
+    // Shuffle reviews
+    for (let i = reviews.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [reviews[i], reviews[j]] = [reviews[j], reviews[i]];
+    }
+
+    // Display reviews
+    const container = document.getElementById("reviewContainer");
+    container.innerHTML = ""; // clear previous reviews
+    reviews.forEach(r => {
+      const div = document.createElement("div");
+      div.className = "review";
+      div.textContent = `${r.review}\n– ${r.name}`;
+      container.appendChild(div);
+    });
+
+  } catch (err) {
+    console.error("Failed to load reviews:", err);
+  }
+}
+
+// --- Load reviews on page load ---
+loadReviews();
