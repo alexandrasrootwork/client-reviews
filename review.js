@@ -89,16 +89,19 @@ function loadReviews() {
     .then(data => {
       const container = document.getElementById("reviewContainer");
       container.innerHTML = ""; // clear existing reviews
+
       // Shuffle reviews for variety
       for (let i = data.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [data[i], data[j]] = [data[j], data[i]];
       }
-      // Display each review
+
+      // Display each review with timestamp
       data.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        div.innerHTML = `<strong>${item.name}</strong><br>${item.review}`;
+        const date = new Date(item.timestamp).toLocaleDateString();
+        div.innerHTML = `<strong>${item.name}</strong> <em>(${date})</em><br>${item.review}`;
         container.appendChild(div);
       });
     })
