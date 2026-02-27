@@ -46,7 +46,7 @@ function dragElement(elmnt) {
 }
 
 // --- SheetDB API URL ---
-const SHEETDB_URL = "YOUR_SHEETDB_API_URL_HERE"; // replace with your SheetDB URL
+const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // replace with your SheetDB URL
 
 // --- Submit review to SheetDB ---
 function submitReview() {
