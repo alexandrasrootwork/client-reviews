@@ -1,20 +1,19 @@
-// --- Configuration ---
+this was my js: // --- Configuration ---
 const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // your SheetDB API URL
 const NEW_DURATION_DAYS = 7; // "NEW" label duration
 
-// --- Show Leave Review popup on click ---
+// --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
   const popup = document.getElementById("reviewPopup");
-  popup.style.display = "flex"; // show popup
+  popup.style.display = "block";
 });
 
-// --- Close Leave Review popup ---
+// --- Close popup ---
 document.getElementById("closeReviewPopup").addEventListener("click", function() {
-  const popup = document.getElementById("reviewPopup");
-  popup.style.display = "none";
+  document.getElementById("reviewPopup").style.display = "none";
 });
 
-// --- Make Leave Review draggable ---
+// --- Make draggable ---
 dragElement(document.getElementById("reviewPopup"));
 
 function dragElement(elmnt) {
@@ -38,15 +37,8 @@ function dragElement(elmnt) {
     pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
-    const newTop = elmnt.offsetTop - pos2;
-    const newLeft = elmnt.offsetLeft - pos1;
-
-    // Constrain drag within viewport on mobile
-    const maxTop = window.innerHeight - elmnt.offsetHeight;
-    const maxLeft = window.innerWidth - elmnt.offsetWidth;
-
-    elmnt.style.top = Math.min(Math.max(0, newTop), maxTop) + "px";
-    elmnt.style.left = Math.min(Math.max(0, newLeft), maxLeft) + "px";
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
   }
 
   function closeDragElement() {
@@ -71,7 +63,7 @@ function submitReview() {
 
   fetch(SHEETDB_URL, {
     method: "POST",
-    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp }] }),
+    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp: timestamp }] }),
     headers: { "Content-Type": "application/json" }
   })
   .then(res => res.json())
@@ -80,8 +72,7 @@ function submitReview() {
     alert("Review submitted successfully!");
     reviewInput.value = "";
     if (nameInput) nameInput.value = "";
-    document.getElementById("reviewPopup").style.display = "none";
-    loadReviews(); // refresh reviews
+    loadReviews();
   })
   .catch(err => {
     console.error("Error submitting review:", err);
@@ -105,10 +96,11 @@ function loadReviews() {
       const reviews = data.data || [];
 
       const now = new Date();
+
+      // Separate new and old reviews
       const newReviews = [];
       const oldReviews = [];
 
-      // Separate new and old reviews
       reviews.forEach(item => {
         const reviewDate = item.timestamp ? new Date(item.timestamp) : null;
         if (reviewDate && (now - reviewDate) / (1000 * 60 * 60 * 24) <= NEW_DURATION_DAYS) {
@@ -118,22 +110,22 @@ function loadReviews() {
         }
       });
 
-      // Shuffle old reviews
+      // Shuffle old reviews for variety
       for (let i = oldReviews.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [oldReviews[i], oldReviews[j]] = [oldReviews[j], oldReviews[i]];
       }
 
-      // Display new reviews first
+      // Display new reviews at the top
       newReviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        div.innerHTML = `<span class="new-label" style="color: orange; font-weight:bold;">NEW</span> 
+        div.innerHTML = `<span class="new-label">NEW</span>
                          <strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
         container.appendChild(div);
       });
 
-      // Display old reviews
+      // Display old reviews below
       oldReviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
