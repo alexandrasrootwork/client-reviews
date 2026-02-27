@@ -96,14 +96,16 @@ function loadReviews() {
       const reviews = data.data || [];
 
       const now = new Date();
+      const NEW_DURATION_MS = NEW_DURATION_DAYS * 24 * 60 * 60 * 1000;
 
       // Separate new and old reviews
       const newReviews = [];
       const oldReviews = [];
 
       reviews.forEach(item => {
-        const reviewDate = item.timestamp ? new Date(item.timestamp) : null;
-        if (reviewDate && (now - reviewDate) / (1000 * 60 * 60 * 24) <= NEW_DURATION_DAYS) {
+        let reviewDate = null;
+        if (item.timestamp) reviewDate = new Date(item.timestamp.replace(' ', 'T'));
+        if (reviewDate && now - reviewDate <= NEW_DURATION_MS) {
           newReviews.push(item);
         } else {
           oldReviews.push(item);
@@ -116,12 +118,21 @@ function loadReviews() {
         [oldReviews[i], oldReviews[j]] = [oldReviews[j], oldReviews[i]];
       }
 
+      // Helper to format date like "Jan 19"
+      function formatDate(dateStr) {
+        if (!dateStr) return "";
+        const d = new Date(dateStr.replace(' ', 'T'));
+        return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      }
+
       // Display new reviews at the top
       newReviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        div.innerHTML = `<span class="new-label">NEW</span>
-                         <strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
+        div.innerHTML = `<span class="new-label">NEW</span> 
+                         <strong>${item.name || "Anonymous"}</strong> 
+                         <span class="review-date">(${formatDate(item.timestamp)})</span><br>
+                         ${item.review}`;
         container.appendChild(div);
       });
 
@@ -129,7 +140,9 @@ function loadReviews() {
       oldReviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
+        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong> 
+                         <span class="review-date">(${formatDate(item.timestamp)})</span><br>
+                         ${item.review}`;
         container.appendChild(div);
       });
     })
