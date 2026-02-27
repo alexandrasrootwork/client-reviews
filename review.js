@@ -1,5 +1,5 @@
 // --- Configuration ---
-const SHEETDB_URL = "YOUR_SHEETDB_API_URL"; // replace with your SheetDB API URL
+const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // replace with your SheetDB API URL
 
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
@@ -58,9 +58,12 @@ function submitReview() {
     return;
   }
 
+  // Add a timestamp when submitting
+  const timestamp = new Date().toISOString();
+
   fetch(SHEETDB_URL, {
     method: "POST",
-    body: JSON.stringify({ data: [{ review: reviewText, name: nameText }] }),
+    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp: timestamp }] }),
     headers: { "Content-Type": "application/json" }
   })
   .then(res => res.json())
@@ -92,17 +95,32 @@ function loadReviews() {
       container.innerHTML = ""; // clear existing reviews
       const reviews = data.data || []; // SheetDB returns { data: [...] }
 
-      // Shuffle reviews for variety
-      for (let i = reviews.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [reviews[i], reviews[j]] = [reviews[j], reviews[i]];
-      }
+      const now = new Date();
+      const NEW_THRESHOLD_HOURS = 7 * 24; // 7 days
+
+      // Sort newest first
+      reviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
       // Display each review
       reviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
+
+        // Check if review is within the last 7 days
+        let newLabel = "";
+        if (item.timestamp) {
+          const reviewDate = new Date(item.timestamp);
+          const hoursDiff = (now - reviewDate) / (1000 * 60 * 60);
+          if (hoursDiff <= NEW_THRESHOLD_HOURS) {
+            newLabel = `<div style="color: orange; font-weight: bold; margin-bottom: 2px;">NEW</div>`;
+          }
+        }
+
+        div.innerHTML = `
+          ${newLabel}
+          <strong>${item.name || "Anonymous"}</strong><br>
+          ${item.review}
+        `;
         container.appendChild(div);
       });
     })
