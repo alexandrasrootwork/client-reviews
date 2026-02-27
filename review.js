@@ -46,6 +46,8 @@ function dragElement(elmnt) {
 }
 
 // --- Submit review to Google Sheets ---
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxfU2D3Qbq7jlsapaf9ffpe2CKUz0PAIqpdMjG01gCrohdlzQRgfuoUhu6OKJn0RjYU/exec";
+
 function submitReview() {
   const reviewInput = document.getElementById("reviewInput");
   const nameInput = document.getElementById("reviewName");
@@ -57,7 +59,7 @@ function submitReview() {
     return;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbyixhZWhN36hvMpi7FS34f4qWQ-VBFVqNQzpr4LWFRQE3Opvpri-eDfmWd9SPKqNO_h/exec", {
+  fetch(WEBAPP_URL, {
     method: "POST",
     body: JSON.stringify({ review: reviewText, name: nameText }),
     headers: { "Content-Type": "application/json" }
@@ -84,24 +86,21 @@ document.getElementById("reviewSubmitButton").addEventListener("click", function
 
 // --- Load reviews from Google Sheets ---
 function loadReviews() {
-  fetch("https://script.google.com/macros/s/AKfycbxNA5g5QP1HXaf4Xoc-O4Y7sUGAR-D1Km9raaTIeCtGPiEesifGLigGujRRAs7V2KWf/exec")
+  fetch(WEBAPP_URL)
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("reviewContainer");
       container.innerHTML = ""; // clear existing reviews
-
       // Shuffle reviews for variety
       for (let i = data.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [data[i], data[j]] = [data[j], data[i]];
       }
-
-      // Display each review with timestamp
+      // Display each review
       data.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        const date = new Date(item.timestamp).toLocaleDateString();
-        div.innerHTML = `<strong>${item.name}</strong> <em>(${date})</em><br>${item.review}`;
+        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
         container.appendChild(div);
       });
     })
