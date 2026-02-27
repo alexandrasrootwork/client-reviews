@@ -88,7 +88,7 @@ body {
   top: 100px;
   left: 50%;
   transform: translateX(-50%);
-  display: none; /* hidden until opened */
+  display: none; /* KEEP hidden until opened */
   width: 400px;
   height: 250px;
   min-width: 300px;
@@ -96,7 +96,6 @@ body {
   padding: 0;
   z-index: 1000;
   box-shadow: 4px 4px 0 #7a7a7a;
-  display: flex;
   flex-direction: column;
   resize: both;
   overflow: hidden;
