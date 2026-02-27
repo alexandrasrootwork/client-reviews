@@ -1,5 +1,5 @@
 // --- Configuration ---
-const SHEETDB_URL = "YOUR_SHEETDB_API_URL"; // replace with your SheetDB API URL
+const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // replace with your SheetDB API URL
 
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
