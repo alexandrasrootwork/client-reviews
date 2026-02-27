@@ -1,6 +1,5 @@
 // --- Configuration ---
-const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // your SheetDB API URL
-const NEW_DURATION_DAYS = 7; // "NEW" label duration
+const SHEETDB_URL = "YOUR_SHEETDB_API_URL"; // replace with your SheetDB API URL
 
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
@@ -59,11 +58,9 @@ function submitReview() {
     return;
   }
 
-  const timestamp = new Date().toISOString();
-
   fetch(SHEETDB_URL, {
     method: "POST",
-    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp: timestamp }] }),
+    body: JSON.stringify({ data: [{ review: reviewText, name: nameText }] }),
     headers: { "Content-Type": "application/json" }
   })
   .then(res => res.json())
@@ -72,7 +69,7 @@ function submitReview() {
     alert("Review submitted successfully!");
     reviewInput.value = "";
     if (nameInput) nameInput.value = "";
-    loadReviews();
+    loadReviews(); // refresh reviews after submitting
   })
   .catch(err => {
     console.error("Error submitting review:", err);
@@ -82,7 +79,7 @@ function submitReview() {
 
 // --- Attach submit function to button ---
 document.getElementById("reviewSubmitButton").addEventListener("click", function(e) {
-  e.preventDefault();
+  e.preventDefault(); // prevent form reload
   submitReview();
 });
 
@@ -92,57 +89,20 @@ function loadReviews() {
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("reviewContainer");
-      container.innerHTML = "";
-      const reviews = data.data || [];
+      container.innerHTML = ""; // clear existing reviews
+      const reviews = data.data || []; // SheetDB returns { data: [...] }
 
-      const now = new Date();
-      const NEW_DURATION_MS = NEW_DURATION_DAYS * 24 * 60 * 60 * 1000;
-
-      // Separate new and old reviews
-      const newReviews = [];
-      const oldReviews = [];
-
-      reviews.forEach(item => {
-        let reviewDate = null;
-        if (item.timestamp) reviewDate = new Date(item.timestamp.replace(' ', 'T'));
-        if (reviewDate && now - reviewDate <= NEW_DURATION_MS) {
-          newReviews.push(item);
-        } else {
-          oldReviews.push(item);
-        }
-      });
-
-      // Shuffle old reviews for variety
-      for (let i = oldReviews.length - 1; i > 0; i--) {
+      // Shuffle reviews for variety
+      for (let i = reviews.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [oldReviews[i], oldReviews[j]] = [oldReviews[j], oldReviews[i]];
+        [reviews[i], reviews[j]] = [reviews[j], reviews[i]];
       }
 
-      // Helper to format date like "Jan 19"
-      function formatDate(dateStr) {
-        if (!dateStr) return "";
-        const d = new Date(dateStr.replace(' ', 'T'));
-        return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-      }
-
-      // Display new reviews at the top
-      newReviews.forEach(item => {
+      // Display each review
+      reviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        div.innerHTML = `<span class="new-label">NEW</span> 
-                         <strong>${item.name || "Anonymous"}</strong> 
-                         <span class="review-date">(${formatDate(item.timestamp)})</span><br>
-                         ${item.review}`;
-        container.appendChild(div);
-      });
-
-      // Display old reviews below
-      oldReviews.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "review";
-        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong> 
-                         <span class="review-date">(${formatDate(item.timestamp)})</span><br>
-                         ${item.review}`;
+        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
         container.appendChild(div);
       });
     })
