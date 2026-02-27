@@ -1,6 +1,6 @@
 // --- Configuration ---
-const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // SheetDB API URL
-const NEW_LABEL_DAYS = 7; // Number of days a review is considered "new"
+const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // your SheetDB API URL
+const NEW_DURATION_DAYS = 7; // "NEW" label duration
 
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
@@ -13,7 +13,7 @@ document.getElementById("closeReviewPopup").addEventListener("click", function()
   document.getElementById("reviewPopup").style.display = "none";
 });
 
-// --- Make draggable only Leave-A-Review popup ---
+// --- Make draggable ---
 dragElement(document.getElementById("reviewPopup"));
 
 function dragElement(elmnt) {
@@ -63,7 +63,7 @@ function submitReview() {
 
   fetch(SHEETDB_URL, {
     method: "POST",
-    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp }] }),
+    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp: timestamp }] }),
     headers: { "Content-Type": "application/json" }
   })
   .then(res => res.json())
@@ -102,20 +102,15 @@ function loadReviews() {
       const oldReviews = [];
 
       reviews.forEach(item => {
-        if (item.timestamp) {
-          const reviewDate = new Date(item.timestamp);
-          const diffDays = (now - reviewDate) / (1000 * 60 * 60 * 24);
-          if (diffDays <= NEW_LABEL_DAYS) {
-            newReviews.push(item);
-          } else {
-            oldReviews.push(item);
-          }
+        const reviewDate = item.timestamp ? new Date(item.timestamp) : null;
+        if (reviewDate && (now - reviewDate) / (1000 * 60 * 60 * 24) <= NEW_DURATION_DAYS) {
+          newReviews.push(item);
         } else {
           oldReviews.push(item);
         }
       });
 
-      // Shuffle old reviews
+      // Shuffle old reviews for variety
       for (let i = oldReviews.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [oldReviews[i], oldReviews[j]] = [oldReviews[j], oldReviews[i]];
@@ -125,7 +120,8 @@ function loadReviews() {
       newReviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        div.innerHTML = `<div class="new-label">NEW</div><strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
+        div.innerHTML = `<span class="new-label">NEW</span>
+                         <strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
         container.appendChild(div);
       });
 
@@ -136,7 +132,6 @@ function loadReviews() {
         div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
         container.appendChild(div);
       });
-
     })
     .catch(err => {
       console.error("Error loading reviews:", err);
