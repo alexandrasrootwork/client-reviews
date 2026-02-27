@@ -1,9 +1,10 @@
 // --- Configuration ---
-const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // replace with your SheetDB API URL
+const SHEETDB_URL = "YOUR_SHEETDB_API_URL"; // replace with your SheetDB API URL
 
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
-  document.getElementById("reviewPopup").style.display = "block";
+  const popup = document.getElementById("reviewPopup");
+  popup.style.display = "block";
 });
 
 // --- Close popup ---
@@ -68,7 +69,7 @@ function submitReview() {
     alert("Review submitted successfully!");
     reviewInput.value = "";
     if (nameInput) nameInput.value = "";
-    loadReviews(); // refresh reviews
+    loadReviews(); // refresh reviews after submitting
   })
   .catch(err => {
     console.error("Error submitting review:", err);
@@ -76,8 +77,9 @@ function submitReview() {
   });
 }
 
+// --- Attach submit function to button ---
 document.getElementById("reviewSubmitButton").addEventListener("click", function(e) {
-  e.preventDefault();
+  e.preventDefault(); // prevent form reload
   submitReview();
 });
 
@@ -87,33 +89,20 @@ function loadReviews() {
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("reviewContainer");
-      container.innerHTML = "";
-      const reviews = data.data || [];
+      container.innerHTML = ""; // clear existing reviews
+      const reviews = data.data || []; // SheetDB returns { data: [...] }
 
-      // Sort by timestamp descending (newest first)
-      reviews.sort((a, b) => {
-        const dateA = a.timestamp ? new Date(a.timestamp) : 0;
-        const dateB = b.timestamp ? new Date(b.timestamp) : 0;
-        return dateB - dateA;
-      });
+      // Shuffle reviews for variety
+      for (let i = reviews.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [reviews[i], reviews[j]] = [reviews[j], reviews[i]];
+      }
 
-      const now = new Date();
-      const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
-
+      // Display each review
       reviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-
-        // Check if review is within the last 7 days
-        let newLabel = "";
-        if (item.timestamp) {
-          const reviewDate = new Date(item.timestamp);
-          if (now - reviewDate <= oneWeekMs) {
-            newLabel = `<div style="color: orange; font-weight: bold; margin-bottom: 4px;">NEW</div>`;
-          }
-        }
-
-        div.innerHTML = `${newLabel}<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
+        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
         container.appendChild(div);
       });
     })
@@ -122,4 +111,5 @@ function loadReviews() {
     });
 }
 
+// --- Load reviews on page load ---
 window.addEventListener("DOMContentLoaded", loadReviews);
