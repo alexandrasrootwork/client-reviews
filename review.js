@@ -3,8 +3,7 @@ const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // replace with y
 
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
-  const popup = document.getElementById("reviewPopup");
-  popup.style.display = "block";
+  document.getElementById("reviewPopup").style.display = "block";
 });
 
 // --- Close popup ---
@@ -58,12 +57,9 @@ function submitReview() {
     return;
   }
 
-  // Add a timestamp when submitting
-  const timestamp = new Date().toISOString();
-
   fetch(SHEETDB_URL, {
     method: "POST",
-    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp: timestamp }] }),
+    body: JSON.stringify({ data: [{ review: reviewText, name: nameText }] }),
     headers: { "Content-Type": "application/json" }
   })
   .then(res => res.json())
@@ -72,7 +68,7 @@ function submitReview() {
     alert("Review submitted successfully!");
     reviewInput.value = "";
     if (nameInput) nameInput.value = "";
-    loadReviews(); // refresh reviews after submitting
+    loadReviews(); // refresh reviews
   })
   .catch(err => {
     console.error("Error submitting review:", err);
@@ -80,9 +76,8 @@ function submitReview() {
   });
 }
 
-// --- Attach submit function to button ---
 document.getElementById("reviewSubmitButton").addEventListener("click", function(e) {
-  e.preventDefault(); // prevent form reload
+  e.preventDefault();
   submitReview();
 });
 
@@ -92,16 +87,19 @@ function loadReviews() {
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("reviewContainer");
-      container.innerHTML = ""; // clear existing reviews
-      const reviews = data.data || []; // SheetDB returns { data: [...] }
+      container.innerHTML = "";
+      const reviews = data.data || [];
+
+      // Sort by timestamp descending (newest first)
+      reviews.sort((a, b) => {
+        const dateA = a.timestamp ? new Date(a.timestamp) : 0;
+        const dateB = b.timestamp ? new Date(b.timestamp) : 0;
+        return dateB - dateA;
+      });
 
       const now = new Date();
-      const NEW_THRESHOLD_HOURS = 7 * 24; // 7 days
+      const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
 
-      // Sort newest first
-      reviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-      // Display each review
       reviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
@@ -110,17 +108,12 @@ function loadReviews() {
         let newLabel = "";
         if (item.timestamp) {
           const reviewDate = new Date(item.timestamp);
-          const hoursDiff = (now - reviewDate) / (1000 * 60 * 60);
-          if (hoursDiff <= NEW_THRESHOLD_HOURS) {
-            newLabel = `<div style="color: orange; font-weight: bold; margin-bottom: 2px;">NEW</div>`;
+          if (now - reviewDate <= oneWeekMs) {
+            newLabel = `<div style="color: orange; font-weight: bold; margin-bottom: 4px;">NEW</div>`;
           }
         }
 
-        div.innerHTML = `
-          ${newLabel}
-          <strong>${item.name || "Anonymous"}</strong><br>
-          ${item.review}
-        `;
+        div.innerHTML = `${newLabel}<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
         container.appendChild(div);
       });
     })
@@ -129,5 +122,4 @@ function loadReviews() {
     });
 }
 
-// --- Load reviews on page load ---
 window.addEventListener("DOMContentLoaded", loadReviews);
