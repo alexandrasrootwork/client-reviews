@@ -47,8 +47,8 @@ function dragElement(elmnt) {
 
 // --- Submit review to Google Sheets ---
 function submitReview() {
-  const reviewInput = document.getElementById("reviewText");
-  const nameInput = document.getElementById("reviewerName");
+  const reviewInput = document.getElementById("reviewInput");
+  const nameInput = document.getElementById("reviewName");
   const reviewText = reviewInput.value.trim();
   const nameText = nameInput?.value.trim() || "";
 
@@ -57,7 +57,7 @@ function submitReview() {
     return;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbx8q42Tmcix2CxNLbYuCelLTiX8HoN1cU0WATSwigYTp7B1PanF0yYgv8WKCo67l3ib/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbxNA5g5QP1HXaf4Xoc-O4Y7sUGAR-D1Km9raaTIeCtGPiEesifGLigGujRRAs7V2KWf/exec", {
     method: "POST",
     body: JSON.stringify({ review: reviewText, name: nameText }),
     headers: { "Content-Type": "application/json" }
@@ -82,32 +82,30 @@ document.getElementById("reviewSubmitButton").addEventListener("click", function
   submitReview();
 });
 
-// --- Load and display reviews from Google Sheets ---
-async function loadReviews() {
-  try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbx8q42Tmcix2CxNLbYuCelLTiX8HoN1cU0WATSwigYTp7B1PanF0yYgv8WKCo67l3ib/exec");
-    const reviews = await response.json();
-
-    // Shuffle reviews
-    for (let i = reviews.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [reviews[i], reviews[j]] = [reviews[j], reviews[i]];
-    }
-
-    // Display reviews
-    const container = document.getElementById("reviewContainer");
-    container.innerHTML = ""; // clear previous reviews
-    reviews.forEach(r => {
-      const div = document.createElement("div");
-      div.className = "review";
-      div.textContent = `${r.review}\n– ${r.name}`;
-      container.appendChild(div);
+// --- Load reviews from Google Sheets ---
+function loadReviews() {
+  fetch("https://script.google.com/macros/s/AKfycbxNA5g5QP1HXaf4Xoc-O4Y7sUGAR-D1Km9raaTIeCtGPiEesifGLigGujRRAs7V2KWf/exec")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("reviewContainer");
+      container.innerHTML = ""; // clear existing reviews
+      // Shuffle reviews for variety
+      for (let i = data.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [data[i], data[j]] = [data[j], data[i]];
+      }
+      // Display each review
+      data.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "review";
+        div.innerHTML = `<strong>${item.name}</strong><br>${item.review}`;
+        container.appendChild(div);
+      });
+    })
+    .catch(err => {
+      console.error("Error loading reviews:", err);
     });
-
-  } catch (err) {
-    console.error("Failed to load reviews:", err);
-  }
 }
 
 // --- Load reviews on page load ---
-loadReviews();
+window.addEventListener("DOMContentLoaded", loadReviews);
