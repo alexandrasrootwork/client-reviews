@@ -45,9 +45,10 @@ function dragElement(elmnt) {
   }
 }
 
-// --- Submit review to Google Sheets ---
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxfU2D3Qbq7jlsapaf9ffpe2CKUz0PAIqpdMjG01gCrohdlzQRgfuoUhu6OKJn0RjYU/exec";
+// --- SheetDB API URL ---
+const SHEETDB_URL = "YOUR_SHEETDB_API_URL_HERE"; // replace with your SheetDB URL
 
+// --- Submit review to SheetDB ---
 function submitReview() {
   const reviewInput = document.getElementById("reviewInput");
   const nameInput = document.getElementById("reviewName");
@@ -59,10 +60,15 @@ function submitReview() {
     return;
   }
 
-  fetch(WEBAPP_URL, {
+  fetch(SHEETDB_URL, {
     method: "POST",
-    body: JSON.stringify({ review: reviewText, name: nameText }),
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      data: {
+        review: reviewText,
+        name: nameText || "Anonymous"
+      }
+    })
   })
   .then(res => res.json())
   .then(data => {
@@ -80,22 +86,24 @@ function submitReview() {
 
 // --- Attach submit function to button ---
 document.getElementById("reviewSubmitButton").addEventListener("click", function(e) {
-  e.preventDefault(); // prevent form reload
+  e.preventDefault();
   submitReview();
 });
 
-// --- Load reviews from Google Sheets ---
+// --- Load reviews from SheetDB ---
 function loadReviews() {
-  fetch(WEBAPP_URL)
+  fetch(SHEETDB_URL)
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("reviewContainer");
-      container.innerHTML = ""; // clear existing reviews
-      // Shuffle reviews for variety
+      container.innerHTML = "";
+
+      // Shuffle reviews
       for (let i = data.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [data[i], data[j]] = [data[j], data[i]];
       }
+
       // Display each review
       data.forEach(item => {
         const div = document.createElement("div");
