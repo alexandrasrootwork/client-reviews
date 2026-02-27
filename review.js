@@ -1,3 +1,6 @@
+// --- Configuration ---
+const SHEETDB_URL = "YOUR_SHEETDB_API_URL"; // replace with your SheetDB API URL
+
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
   const popup = document.getElementById("reviewPopup");
@@ -15,9 +18,7 @@ dragElement(document.getElementById("reviewPopup"));
 function dragElement(elmnt) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   const header = document.getElementById("reviewPopupTitle");
-  if (header) {
-    header.onmousedown = dragMouseDown;
-  }
+  if (header) header.onmousedown = dragMouseDown;
 
   function dragMouseDown(e) {
     e = e || window.event;
@@ -45,9 +46,6 @@ function dragElement(elmnt) {
   }
 }
 
-// --- SheetDB API URL ---
-const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // replace with your SheetDB URL
-
 // --- Submit review to SheetDB ---
 function submitReview() {
   const reviewInput = document.getElementById("reviewInput");
@@ -62,13 +60,8 @@ function submitReview() {
 
   fetch(SHEETDB_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      data: {
-        review: reviewText,
-        name: nameText || "Anonymous"
-      }
-    })
+    body: JSON.stringify({ data: [{ review: reviewText, name: nameText }] }),
+    headers: { "Content-Type": "application/json" }
   })
   .then(res => res.json())
   .then(data => {
@@ -86,7 +79,7 @@ function submitReview() {
 
 // --- Attach submit function to button ---
 document.getElementById("reviewSubmitButton").addEventListener("click", function(e) {
-  e.preventDefault();
+  e.preventDefault(); // prevent form reload
   submitReview();
 });
 
@@ -96,16 +89,17 @@ function loadReviews() {
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("reviewContainer");
-      container.innerHTML = "";
+      container.innerHTML = ""; // clear existing reviews
+      const reviews = data.data || []; // SheetDB returns { data: [...] }
 
-      // Shuffle reviews
-      for (let i = data.length - 1; i > 0; i--) {
+      // Shuffle reviews for variety
+      for (let i = reviews.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [data[i], data[j]] = [data[j], data[i]];
+        [reviews[i], reviews[j]] = [reviews[j], reviews[i]];
       }
 
       // Display each review
-      data.forEach(item => {
+      reviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
         div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
