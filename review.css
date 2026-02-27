@@ -3,19 +3,56 @@ body {
   font-family: 'Press Start 2P', monospace;
   background: #d97bb3; /* pink desktop */
   margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden; /* prevents body scrolling on mobile */
 }
 
-/* --- Menu clickable item --- */
-.menu-item.clickable {
-  cursor: pointer;
-  color: #0000AA;
-}
-.menu-item.clickable:hover {
-  background-color: #000080;
-  color: #FFFFFF;
+/* --- Client Review Window --- */
+.client-window {
+  width: 600px;
+  height: 500px;
+  background: #C0C0C0;
+  border: 2px solid #000;
+  box-shadow: 4px 4px 0 #7a7a7a;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* keep window frame neat */
 }
 
-/* --- Leave A Review Popup (draggable) --- */
+.client-window .title-bar {
+  background: #000080;
+  color: white;
+  padding: 4px 8px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.client-window .buttons span {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  background: #c0c0c0;
+  border: 1px solid #000;
+  text-align: center;
+  line-height: 14px;
+  font-size: 11px;
+  color: black;
+}
+
+.client-window .content {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+/* --- Leave a Review Popup --- */
 .review-popup {
   border: 2px solid #000;
   background: #C0C0C0;
@@ -34,10 +71,8 @@ body {
   flex-direction: column;
   resize: both;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
-/* --- Title Bar for draggable popup --- */
 .review-popup .title-bar {
   background: #000080;
   color: #FFF;
@@ -47,10 +82,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: move;
+  cursor: move; /* draggable only for this window */
 }
 
-/* --- Close Button --- */
 .review-popup .buttons span {
   cursor: pointer;
   display: inline-block;
@@ -65,16 +99,14 @@ body {
   color: black;
 }
 
-/* --- Content Area of popup --- */
 .review-popup .content {
   background: #dcdcdc;
   padding: 8px;
   font-family: 'MS Sans Serif', Tahoma, sans-serif;
   font-size: 13px;
   line-height: 1.4;
-  overflow: auto;
-  flex: 1 1 auto;
-  min-height: 0;
+  overflow-y: auto; /* scrollable content */
+  flex: 1;
 }
 
 /* --- Form Button --- */
@@ -92,63 +124,26 @@ body {
   box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #FFF;
 }
 
-/* --- Client Review Container --- */
-#reviewContainer {
-  padding: 8px;
-  max-height: 500px;
-  overflow-y: auto;
-  font-family: 'MS Sans Serif', Tahoma, sans-serif;
-  font-size: 13px;
-  background: #ffffff;
-  border: 2px solid #000;
-  box-shadow: 4px 4px 0 #7a7a7a;
-}
-
-/* --- Individual Review --- */
-.review {
-  margin-bottom: 16px;
-  line-height: 1.4;
-}
-
-/* --- NEW Label --- */
-.review .new-label {
+/* --- NEW label for recent reviews --- */
+.new-label {
   color: orange;
   font-weight: bold;
-  font-size: 12px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
-/* --- Responsive adjustments --- */
-@media (max-width: 600px) {
-  /* Client reviews take 75% of screen, fixed, not draggable */
-  #reviewContainer {
+/* --- Mobile Adjustments --- */
+@media (max-width: 768px) {
+  body {
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* prevent body scrolling */
+  }
+  .client-window {
     width: 75vw;
     height: 75vh;
-    max-height: none;
-    max-width: none;
-    overflow-y: auto;
-    position: relative;
-    margin: auto;
   }
-
-  /* Leave a review popup smaller than client reviews, draggable */
   .review-popup {
-    width: 65vw;
+    width: 80vw;
     height: 50vh;
-    top: 10vh;
-  }
-
-  .review-popup .content textarea,
-  .review-popup .content input {
-    font-size: 14px;
-  }
-
-  .review {
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .review .new-label {
-    font-size: 13px;
   }
 }
