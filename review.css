@@ -20,7 +20,6 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  position: relative;
 }
 
 /* --- Title Bar --- */
@@ -163,21 +162,22 @@ body {
 @media only screen and (max-width: 768px) {
   body {
     justify-content: center;
-    align-items: center; /* center client review window vertically */
+    align-items: flex-start;
     overflow: hidden;
   }
 
   /* Client review window fills most of the screen */
-  #clientReviewWindow {
+  .window {
     width: 80vw;      /* 80% of viewport width */
     height: 80vh;     /* 80% of viewport height */
+    margin: 10vh auto; /* center with vertical margin */
   }
 
   /* Leave a Review popup slightly smaller */
   .review-popup {
     width: 70vw;
     height: 50vh;
-    top: 25vh;
+    top: 10vh;
     left: 50%;
     transform: translateX(-50%);
   }
