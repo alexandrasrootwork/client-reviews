@@ -1,4 +1,4 @@
-this was my js: // --- Configuration ---
+// --- Configuration ---
 const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // your SheetDB API URL
 const NEW_DURATION_DAYS = 7; // "NEW" label duration
 
