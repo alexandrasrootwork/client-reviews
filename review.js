@@ -1,6 +1,5 @@
 // --- Configuration ---
-const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // your SheetDB API URL
-const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+const SHEETDB_URL = "https://sheetdb.io/api/v1/gswf61v23ihpz"; // replace with your SheetDB API URL
 
 // --- Show popup ---
 document.getElementById("openReviewWindow").addEventListener("click", function() {
@@ -59,11 +58,9 @@ function submitReview() {
     return;
   }
 
-  const timestamp = new Date().toISOString(); // add timestamp for "new" label
-
   fetch(SHEETDB_URL, {
     method: "POST",
-    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp: timestamp }] }),
+    body: JSON.stringify({ data: [{ review: reviewText, name: nameText }] }),
     headers: { "Content-Type": "application/json" }
   })
   .then(res => res.json())
@@ -95,42 +92,17 @@ function loadReviews() {
       container.innerHTML = ""; // clear existing reviews
       const reviews = data.data || []; // SheetDB returns { data: [...] }
 
-      const now = new Date();
-      const newReviews = [];
-      const oldReviews = [];
-
-      // Separate new and old reviews
-      reviews.forEach(item => {
-        const reviewDate = new Date(item.timestamp);
-        if (now - reviewDate <= ONE_WEEK_MS) {
-          newReviews.push(item);
-        } else {
-          oldReviews.push(item);
-        }
-      });
-
-      // Shuffle old reviews
-      for (let i = oldReviews.length - 1; i > 0; i--) {
+      // Shuffle reviews for variety
+      for (let i = reviews.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [oldReviews[i], oldReviews[j]] = [oldReviews[j], oldReviews[i]];
+        [reviews[i], reviews[j]] = [reviews[j], reviews[i]];
       }
 
-      const displayReviews = [...newReviews, ...oldReviews]; // new reviews on top
-
-      // Display reviews
-      displayReviews.forEach(item => {
+      // Display each review
+      reviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-
-        let content = "";
-
-        // If review is new, add orange NEW label above it
-        if (now - new Date(item.timestamp) <= ONE_WEEK_MS) {
-          content += `<div style="color: orange; font-weight: bold; font-family: 'MS Sans Serif', Tahoma, sans-serif;">NEW</div>`;
-        }
-
-        content += `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
-        div.innerHTML = content;
+        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
         container.appendChild(div);
       });
     })
