@@ -157,40 +157,40 @@ body {
 /* Mobile one-page client reviews with fixed background */
 @media (max-width: 768px) {
 
-  /* Body takes full screen, background fixed */
-  body {
+  /* Lock the background */
+  html, body {
+    height: 100vh;          /* full viewport height */
+    width: 100vw;           /* full viewport width */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;       /* prevent scrolling on the background */
+    background: #d97bb3;    /* fixed pink background */
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100vw;
-    background: #d97bb3;   /* pink desktop background */
-    overflow: hidden;       /* prevent body from scrolling */
   }
 
   /* Main client reviews window */
   .window {
-    width: 90vw;            /* ~90% of viewport width */
-    height: 90vh;           /* ~90% of viewport height */
+    width: 90vw;             /* almost full width */
+    height: 90vh;            /* almost full height */
     max-width: none;
     max-height: none;
     border-radius: 8px;
     box-shadow: 4px 4px 0 #7a7a7a;
     flex-direction: column;
-    overflow: hidden;       /* window itself does not scroll */
+    overflow: hidden;        /* window itself does not scroll */
   }
 
   /* Only the content scrolls */
   .content {
-    flex: 1;                /* take up remaining space inside window */
-    overflow-y: auto;       /* enable vertical scrolling */
+    flex: 1;                 /* fill remaining space */
+    overflow-y: auto;        /* vertical scroll inside window */
     padding: 12px;
     font-size: 13px;
   }
 
-  /* Popup scales nicely */
+  /* Leave a Review popup */
   .review-popup {
     width: 80vw;
     height: 50vh;
@@ -199,10 +199,10 @@ body {
     transform: translateX(-50%);
     max-width: none;
     max-height: none;
-    display: none;          /* still hidden on load */
+    display: none;           /* still hidden on load */
   }
 
-  /* Title bars and buttons scale down */
+  /* Fonts and buttons scale down */
   .title-bar,
   .review-popup .title-bar {
     font-size: 12px;
