@@ -157,76 +157,49 @@ body {
   box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #FFF;
 }
 
-/* --- Mobile adjustments --- */
-@media only screen and (max-width: 768px) {
-  body {
-    justify-content: center;
-    align-items: flex-start;
-    overflow: hidden;
-  }
-
-  /* Client review window fills most of the screen */
+/* --- Mobile one-page client reviews --- */
+@media (max-width: 768px) {
+  /* Main client reviews window fills screen */
   .window {
-    width: 80vw;      /* 80% of viewport width */
-    height: 80vh;     /* 80% of viewport height */
-    margin: 10vh auto; /* center with vertical margin */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* full viewport height */
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden; /* only content scrolls */
   }
 
-  /* Leave a Review popup slightly smaller */
+  .content {
+    flex: 1;
+    overflow-y: auto; /* scrollable reviews inside */
+  }
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* background unscrollable */
+  }
+
+  /* Keep popup fixed size and draggable */
   .review-popup {
-    width: 70vw;
-    height: 50vh;
-    top: 10vh;
+    width: 400px;
+    height: 250px;
+    max-width: 90%;
+    max-height: 90%;
+    position: absolute;
+    top: 100px;
     left: 50%;
     transform: translateX(-50%);
+    display: none;
+    flex-direction: column;
+    overflow: hidden; /* content scrolls only */
   }
 
-  /* Scroll inside windows only */
-  .window .content,
-  .review-popup .content {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+  /* Prevent textarea resize */
+  #reviewInput {
+    resize: none;
   }
-}
-
-/* --- Close Button --- */
-.review-popup .buttons span {
-  cursor: pointer;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-left: 4px;
-  background: #c0c0c0;
-  border: 1px solid #000;
-  text-align: center;
-  line-height: 14px;
-  font-size: 11px;
-  color: black;
-}
-
-/* --- Content Area --- */
-.review-popup .content {
-  background: #dcdcdc;       /* light grey for form fields */
-  padding: 8px;              /* smaller padding like in the image */
-  font-family: 'MS Sans Serif', Tahoma, sans-serif;
-  font-size: 13px;
-  line-height: 1.4;
-  overflow: auto;            /* allows scrolling if content exceeds height */
-  flex: 1 1 auto;            /* content fills remaining popup height */
-  min-height: 0;             /* ensures content shrinks properly */
-}
-
-/* --- Form Button --- */
-.retro-button {
-  font-family: 'MS Sans Serif', Tahoma, sans-serif; /* match client reviews */
-  font-size: 13px;
-  padding: 4px 8px;
-  background: #C0C0C0;
-  border: 2px solid #FFF;
-  box-shadow: inset -2px -2px 0 #808080, inset 2px 2px 0 #FFF;
-  cursor: pointer;
-  color: #000;
-}
-.retro-button:hover {
-  box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #FFF;
 }
