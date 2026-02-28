@@ -187,31 +187,4 @@ body {
 /* --- Desktop / General Styles --- */
 /* (everything you already have for .window, .content, .review, .review-popup, etc.) */
 
-/* --- Mobile one-page client reviews with fixed background --- */
-@media (max-width: 768px) {
-  .window {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    border-radius: 0;
-    box-shadow: none;
-    overflow: hidden; /* only .content scrolls */
-  }
 
-  .content {
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  body, html {
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* prevent background scrolling */
-    background: none;
-  }
-}
