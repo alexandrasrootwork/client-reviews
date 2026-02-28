@@ -88,23 +88,33 @@ function loadReviews() {
   fetch(SHEETDB_URL)
     .then(res => res.json())
     .then(data => {
-      console.log("RAW RESPONSE:", data); // <-- debug line
+      console.log("RAW RESPONSE:", data);
       const container = document.getElementById("reviewContainer");
       container.innerHTML = "";
 
       const reviews = Array.isArray(data) ? data : data.data || [];
 
-      // Shuffle reviews for variety
-      for (let i = reviews.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [reviews[i], reviews[j]] = [reviews[j], reviews[i]];
-      }
+      // Sort or shuffle as you like
+      reviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // newest first
 
-      // Display each review
       reviews.forEach(item => {
         const div = document.createElement("div");
         div.className = "review";
-        div.innerHTML = `<strong>${item.name || "Anonymous"}</strong><br>${item.review}`;
+
+        // Check if the review is less than 7 days old
+        const reviewDate = new Date(item.timestamp);
+        const now = new Date();
+        const diffDays = (now - reviewDate) / (1000 * 60 * 60 * 24); // diff in days
+
+        const newBadge = diffDays <= 7 
+          ? `<div style="color: orange; font-weight: bold; font-size: 10px;">NEW</div>` 
+          : "";
+
+        div.innerHTML = `
+          ${newBadge}
+          <strong>${item.name || "Anonymous"}</strong><br>
+          ${item.review}
+        `;
         container.appendChild(div);
       });
     })
