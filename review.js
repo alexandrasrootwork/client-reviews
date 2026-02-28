@@ -94,22 +94,44 @@ function loadReviews() {
 
       const reviews = Array.isArray(data) ? data : data.data || [];
 
-      // Sort or shuffle as you like
-      reviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // newest first
+      const now = new Date();
+
+      // Split into new vs old
+      const newReviews = [];
+      const oldReviews = [];
 
       reviews.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "review";
-
-        // Check if the review is less than 7 days old
         const reviewDate = new Date(item.timestamp);
-        const now = new Date();
-        const diffDays = (now - reviewDate) / (1000 * 60 * 60 * 24); // diff in days
+        const diffDays = (now - reviewDate) / (1000 * 60 * 60 * 24);
+        if (diffDays <= 7) {
+          newReviews.push(item);
+        } else {
+          oldReviews.push(item);
+        }
+      });
 
+      // Sort new reviews newest → oldest
+      newReviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+      // Shuffle old reviews
+      for (let i = oldReviews.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [oldReviews[i], oldReviews[j]] = [oldReviews[j], oldReviews[i]];
+      }
+
+      // Combine lists: new reviews first
+      const combined = [...newReviews, ...oldReviews];
+
+      // Render
+      combined.forEach(item => {
+        const reviewDate = new Date(item.timestamp);
+        const diffDays = (now - reviewDate) / (1000 * 60 * 60 * 24);
         const newBadge = diffDays <= 7 
           ? `<div style="color: orange; font-weight: bold; font-size: 10px;">NEW</div>` 
           : "";
 
+        const div = document.createElement("div");
+        div.className = "review";
         div.innerHTML = `
           ${newBadge}
           <strong>${item.name || "Anonymous"}</strong><br>
