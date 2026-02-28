@@ -84,7 +84,7 @@ body {
 
 /* --- Leave A Review Popup --- */
 .review-popup {
-  display: none; /* always hidden initially */
+  display: none; /* keep popup hidden initially */
   position: absolute;
   top: 100px;
   left: 50%;
@@ -155,26 +155,27 @@ body {
 }
 
 /* Mobile optimization */
-@media (max-width: 480px) {
-  /* Make the main reviews window larger on small screens */
+@media (max-width: 768px) {
+  /* Scale main reviews window dynamically */
   .window {
-    width: 95vw;       /* 95% of viewport width */
-    height: 85vh;      /* 85% of viewport height */
-    max-width: none;   /* remove desktop max */
-    max-height: none;  /* remove desktop max */
+    width: 95vw;        /* 95% of viewport width */
+    height: 90vh;       /* 90% of viewport height */
+    max-width: none;    /* allow it to grow beyond desktop max */
+    max-height: none;
+    margin: 0 auto;     /* center horizontally */
   }
 
-  /* Make the Leave a Review popup scale nicely */
+  /* Scale Leave a Review popup */
   .review-popup {
     width: 90vw;
     height: 60vh;
     top: 10vh;
     left: 50%;
     transform: translateX(-50%);
-    /* DO NOT set display here — leave as hidden */
+    /* DO NOT change display here */
   }
 
-  /* Adjust fonts and padding for smaller screens */
+  /* Adjust fonts and padding for readability */
   .content,
   .review-popup .content {
     font-size: 12px;
