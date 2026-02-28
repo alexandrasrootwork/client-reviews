@@ -12,10 +12,12 @@ body {
 
 /* --- Main Client Review Window --- */
 .window {
-  width: 90vw;       /* max 90% of viewport width */
-  max-width: 420px;  /* keeps it the same on desktop */
-  height: 80vh;      /* 80% of viewport height on mobile */
-  max-height: 500px; /* desktop limit */
+  width: 420px;
+  height: 500px;
+  background: #c0c0c0; /* window frame */
+  border: 2px solid #000;
+  box-shadow: 4px 4px 0 #7a7a7a;
+  display: flex;
   flex-direction: column;
   overflow: hidden;
 }
@@ -80,13 +82,24 @@ body {
 
 /* --- Leave A Review Popup --- */
 .review-popup {
-  width: 90vw;
-  max-width: 400px;
-  height: 60vh;
-  max-height: 250px;
-  top: 10vh;          /* distance from top */
+  border: 2px solid #000;
+  background: #C0C0C0;
+  position: absolute;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
+  display: none; /* KEEP hidden until opened */
+  width: 400px;
+  height: 250px;
+  min-width: 300px;
+  max-width: 500px;
+  padding: 0;
+  z-index: 1000;
+  box-shadow: 4px 4px 0 #7a7a7a;
+  flex-direction: column;
+  resize: both;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 /* --- Popup Title Bar --- */
@@ -142,30 +155,4 @@ body {
 }
 .retro-button:hover {
   box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #FFF;
-}
-
-/* --- Mobile Optimization --- */
-@media (max-width: 480px) {
-  .review-popup {
-    width: 90vw;
-    max-width: 400px;
-    height: 60vh;
-    max-height: 250px;
-    top: 10vh;
-    left: 50%;
-    transform: translateX(-50%);
-    /* do NOT set display here! */
-  }
-
-  /* Only adjust fonts, padding, buttons, etc. */
-  .content,
-  .review-popup .content {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  .retro-button {
-    font-size: 12px;
-    padding: 3px 6px;
-  }
 }
