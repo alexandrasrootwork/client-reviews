@@ -146,14 +146,22 @@ body {
 
 /* --- Mobile Optimization --- */
 @media (max-width: 480px) {
-  .content, .review-popup .content {
-    font-size: 12px;
-    padding: 8px;
+  .review-popup {
+    width: 90vw;
+    max-width: 400px;
+    height: 60vh;
+    max-height: 250px;
+    top: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    /* do NOT set display here! */
   }
 
-  .title-bar {
+  /* Only adjust fonts, padding, buttons, etc. */
+  .content,
+  .review-popup .content {
     font-size: 12px;
-    padding: 3px 6px;
+    padding: 8px;
   }
 
   .retro-button {
