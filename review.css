@@ -159,6 +159,10 @@ body {
 
 /* --- Mobile one-page client reviews --- */
 @media (max-width: 768px) {
+  body {
+    display: block;
+  }
+}
   /* Main client reviews window fills screen */
   .window {
     position: fixed;
