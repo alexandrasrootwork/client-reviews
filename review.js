@@ -149,5 +149,3 @@ function loadReviews() {
 
 // --- Load reviews on page load ---
 window.addEventListener("DOMContentLoaded", loadReviews);
-
-
