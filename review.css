@@ -154,30 +154,56 @@ body {
   box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #FFF;
 }
 
-/* Mobile optimization */
+/* Mobile one-page client reviews */
 @media (max-width: 768px) {
   body {
-    display: block;     /* stop flex centering on mobile */
+    display: flex;           /* keep centering */
+    justify-content: center;
+    align-items: center;
     margin: 0;
     padding: 0;
-    height: 100vh;      /* take full viewport height */
-    background: #d97bb3; /* keep pink desktop */
+    height: 100vh;           /* full viewport height */
+    background: #d97bb3;     /* keep pink desktop background */
   }
 
   .window {
-    width: 100vw;       /* fill full width of mobile screen */
-    height: 100vh;      /* fill full height of mobile screen */
-    max-width: none;
+    width: 90vw;             /* 90% of viewport width */
+    height: 90vh;            /* 90% of viewport height */
+    max-width: none;         /* remove desktop max */
     max-height: none;
-    margin: 0;          /* remove centering offset */
-    border-radius: 0;   /* optional: remove corners for full-screen look */
-    box-shadow: none;   /* optional: remove shadow to use full screen */
+    border-radius: 8px;      /* optional: softer corners */
+    box-shadow: 4px 4px 0 #7a7a7a; /* keep retro shadow */
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .content {
-    padding: 10px;
+    flex: 1;                 /* fill remaining space inside window */
+    overflow-y: auto;        /* scroll if reviews exceed height */
+    padding: 12px;
     font-size: 13px;
-    height: calc(100vh - 40px); /* leave space for title/menu bar */
-    overflow-y: auto;
+  }
+
+  /* Keep popup scaling nicely on mobile */
+  .review-popup {
+    width: 80vw;
+    height: 50vh;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: none;
+    max-height: none;
+  }
+
+  /* Smaller fonts for mobile */
+  .title-bar,
+  .review-popup .title-bar {
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+
+  .retro-button {
+    font-size: 12px;
+    padding: 3px 6px;
   }
 }
