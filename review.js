@@ -88,9 +88,11 @@ function loadReviews() {
   fetch(SHEETDB_URL)
     .then(res => res.json())
     .then(data => {
+      console.log("RAW RESPONSE:", data); // <-- debug line
       const container = document.getElementById("reviewContainer");
-      container.innerHTML = ""; // clear existing reviews
-      const reviews = data.data || []; // SheetDB returns { data: [...] }
+      container.innerHTML = "";
+
+      const reviews = Array.isArray(data) ? data : data.data || [];
 
       // Shuffle reviews for variety
       for (let i = reviews.length - 1; i > 0; i--) {
