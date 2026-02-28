@@ -161,18 +161,18 @@ body {
 @media (max-width: 768px) {
 
   .window {
-    position: fixed !important;
-    inset: 0 !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-    width: 100vw !important;
-    height: 100vh !important;
+    width: 92vw;
+    height: 85vh;
 
-    max-width: none !important;
-    max-height: none !important;
+    max-width: none;
+    max-height: none;
 
-    margin: 0 !important;
-    border-radius: 0;
-    box-shadow: none;
+    margin: 0;
   }
 
   body, html {
