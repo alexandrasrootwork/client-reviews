@@ -157,29 +157,30 @@ body {
 /* Mobile one-page client reviews with fixed background */
 @media (max-width: 768px) {
 
-  /* Lock the background */
+  /* Lock background and body */
   html, body {
     height: 100vh;          /* full viewport height */
     width: 100vw;           /* full viewport width */
     margin: 0;
     padding: 0;
-    overflow: hidden;       /* prevent scrolling on the background */
+    overflow: hidden;       /* background cannot scroll */
     background: #d97bb3;    /* fixed pink background */
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  /* Main client reviews window */
+  /* Main client reviews window fills nearly full screen */
   .window {
-    width: 90vw;             /* almost full width */
-    height: 90vh;            /* almost full height */
-    max-width: none;
-    max-height: none;
+    width: 95vw;            /* almost full width */
+    height: 95vh;           /* almost full height */
+    max-width: 95vw;
+    max-height: 95vh;
     border-radius: 8px;
     box-shadow: 4px 4px 0 #7a7a7a;
+    display: flex;
     flex-direction: column;
-    overflow: hidden;        /* window itself does not scroll */
+    overflow: hidden;       /* window itself does not scroll */
   }
 
   /* Only the content scrolls */
@@ -190,16 +191,16 @@ body {
     font-size: 13px;
   }
 
-  /* Leave a Review popup */
+  /* Leave a Review popup scales nicely */
   .review-popup {
-    width: 80vw;
-    height: 50vh;
-    top: 25%;
+    width: 90vw;
+    height: 60vh;
+    top: 20%;
     left: 50%;
     transform: translateX(-50%);
-    max-width: none;
-    max-height: none;
-    display: none;           /* still hidden on load */
+    max-width: 90vw;
+    max-height: 60vh;
+    display: none;           /* hidden until clicked */
   }
 
   /* Fonts and buttons scale down */
