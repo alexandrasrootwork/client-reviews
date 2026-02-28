@@ -58,9 +58,11 @@ function submitReview() {
     return;
   }
 
+  const timestamp = new Date().toISOString(); // <-- add this
+
   fetch(SHEETDB_URL, {
     method: "POST",
-    body: JSON.stringify({ data: [{ review: reviewText, name: nameText }] }),
+    body: JSON.stringify({ data: [{ review: reviewText, name: nameText, timestamp }] }),
     headers: { "Content-Type": "application/json" }
   })
   .then(res => res.json())
