@@ -12,8 +12,8 @@ body {
 
 /* --- Main Client Review Window --- */
 .window {
-  width: 420px;
-  height: 500px;
+  width: 420px;      /* fixed desktop width */
+  height: 500px;     /* fixed desktop height */
   max-width: 420px;
   max-height: 500px;
   background: #c0c0c0;
@@ -156,34 +156,21 @@ body {
 
 /* Mobile optimization */
 @media (max-width: 768px) {
-  /* Scale main reviews window dynamically */
   .window {
-    width: 95vw;        /* 95% of viewport width */
-    height: 90vh;       /* 90% of viewport height */
-    max-width: none;    /* allow it to grow beyond desktop max */
-    max-height: none;
-    margin: 0 auto;     /* center horizontally */
+    width: 95vw;       /* fill 95% of screen width */
+    height: 90vh;      /* fill 90% of screen height */
+    max-width: none;   /* remove desktop max */
+    max-height: none;  /* remove desktop max */
+    margin: 0 auto;    /* center horizontally */
   }
 
-  /* Scale Leave a Review popup */
-  .review-popup {
-    width: 90vw;
-    height: 60vh;
-    top: 10vh;
-    left: 50%;
-    transform: translateX(-50%);
-    /* DO NOT change display here */
-  }
-
-  /* Adjust fonts and padding for readability */
-  .content,
-  .review-popup .content {
-    font-size: 12px;
+  .content {
+    font-size: 12px;   /* scale font for small screens */
     padding: 8px;
+    overflow-y: auto;  /* scroll if reviews exceed height */
   }
 
-  .title-bar,
-  .review-popup .title-bar {
+  .title-bar {
     font-size: 12px;
     padding: 3px 6px;
   }
