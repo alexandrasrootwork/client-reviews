@@ -149,3 +149,19 @@ function loadReviews() {
 
 // --- Load reviews on page load ---
 window.addEventListener("DOMContentLoaded", loadReviews);
+
+// --- MOBILE: make .window fill actual viewport height ---
+function setMobileWindowHeight() {
+  if (window.innerWidth <= 768) {
+    const windowEl = document.querySelector('.window');
+    if (!windowEl) return;
+    const vh = window.innerHeight;      // actual visible viewport height
+    windowEl.style.height = vh + 'px';
+  }
+}
+
+// Run on load
+window.addEventListener('load', setMobileWindowHeight);
+
+// Update height on resize / orientation change
+window.addEventListener('resize', setMobileWindowHeight);
