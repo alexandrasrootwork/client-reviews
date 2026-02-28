@@ -165,3 +165,7 @@ window.addEventListener('load', setMobileWindowHeight);
 
 // Update height on resize / orientation change
 window.addEventListener('resize', setMobileWindowHeight);
+
+// When the device is rotated (portrait ↔ landscape), recalculate the .window height
+// so it always fills the visible mobile viewport and prevents background scrolling
+window.addEventListener('orientationchange', setMobileWindowHeight);
